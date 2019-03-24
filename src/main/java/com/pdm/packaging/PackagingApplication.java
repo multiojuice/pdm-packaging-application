@@ -9,10 +9,9 @@ import java.sql.SQLException;
 public class PackagingApplication {
 
 	public static void main(String[] args) {
+		SpringApplication.run(PackagingApplication.class, args);
 		H2Calls h2 = new H2Calls();
 		h2.createConnection("./localDB", "root", "default", 0);
-
-		SpringApplication.run(PackagingApplication.class, args);
 	}
 
 

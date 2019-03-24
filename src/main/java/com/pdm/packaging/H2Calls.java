@@ -58,4 +58,25 @@ public class H2Calls {
             System.out.println("Failed to close connection to H2 database");
         }
     }
+
+    public void execute(String cmd) {
+        try {
+            Statement stmt = h2connection.createStatement();
+            stmt.execute(cmd);
+        } catch (Exception e) {
+            System.out.println("Error executing statement '" + cmd + "\n" + e);
+        }
+    }
+
+    public ResultSet query(String cmd) {
+        ResultSet results = null;
+        try {
+            Statement stmt = h2connection.createStatement();
+            results = stmt.executeQuery(cmd);
+        } catch (Exception e) {
+            System.out.println("Error querying statement '" + cmd + "\n" + e);
+        }
+        return results;
+    }
+
 }

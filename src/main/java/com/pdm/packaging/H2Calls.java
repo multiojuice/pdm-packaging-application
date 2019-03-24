@@ -77,16 +77,16 @@ public class H2Calls {
             Statement stmt = h2connection.createStatement();
             results = stmt.executeQuery(cmd);
         } catch (Exception e) {
-            System.out.println("Error querying statement '" + cmd + "\n" + e);
+            System.out.println("Error querying statement '" + cmd + "'\n" + e);
         }
         return results;
     }
 
     public void initialize() {
-        String table1 = "create table if not exists orders (order_ID integer primary key auto_increment, sender_ID integer not null, receiver_ID integer not null, is_prepaid bit default 0, cost decimal(20, 2), tracking_ID integer not null);";
+        String table1 = "create table if not exists orders (order_ID integer primary key auto_increment, sender_ID integer not null, receiver_ID integer not null, is_prepaid bit default 0, cost decimal(20, 2), is_complete bit default 0 not null);";
         String table2 = "create table if not exists users (user_ID integer primary key auto_increment, name varchar(255) not null, is_premium bit default 0 not null, phone_number varchar(11), business_ID integer);";
         String table3 = "create table if not exists business (business_ID integer primary key auto_increment, name varchar(255) not null, address varchar(255) not null);";
-        String table4 = "create table if not exists package (package_ID integer primary key auto_increment, order_ID integer not null, shipping_status varchar(1) not null, weight integer, delivery_time integer, trait varchar(1));";
+        String table4 = "create table if not exists package (package_ID integer primary key auto_increment, order_ID integer not null, shipping_status varchar(1) not null, weight integer, delivery_time integer, trait varchar(1), tracking_ID integer not null);";
         String table5 = "create table if not exists traits (trait_ID varchar(1) primary key auto_increment, name varchar(255) not null);";
         String table6 = "create table if not exists tracking (tracking_ID integer primary key auto_increment, transport_ID integer not null, current_location_ID integer);";
         String table7 = "create table if not exists transport (transport_ID integer primary key auto_increment, type varchar(255) not null);";
@@ -123,13 +123,13 @@ public class H2Calls {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String packages = "insert into package (order_ID, shipping_status, weight, delivery_time, trait) values ";
+        String packages = "insert into package (order_ID, shipping_status, weight, delivery_time, trait, tracking_ID) values ";
         try {
             BufferedReader br = new BufferedReader(new FileReader("./import/package.csv"));
             String line;
             while((line = br.readLine()) != null){
                 String[] split = line.split(",");
-                packages += "(" + split[0] + ", " + split[1] + ", " + split[2] + ", " + split[3] + ", " + split[4] + "),";
+                packages += "(" + split[0] + ", " + split[1] + ", " + split[2] + ", " + split[3] + ", " + split[4] + ", " + split[5] + "),";
             }
             packages = packages.substring(0, packages.length() - 1);
             packages = packages + ";";
@@ -137,9 +137,9 @@ public class H2Calls {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String orders = "insert into orders (sender_ID, receiver_ID, is_prepaid, cost, tracking_ID) values ";
+        String orders = "insert into orders (sender_ID, receiver_ID, is_prepaid, cost, is_complete) values ";
         try {
-            BufferedReader br = new BufferedReader(new FileReader("./import/order.csv"));
+            BufferedReader br = new BufferedReader(new FileReader("./import/orders.csv"));
             String line;
             while((line = br.readLine()) != null){
                 String[] split = line.split(",");

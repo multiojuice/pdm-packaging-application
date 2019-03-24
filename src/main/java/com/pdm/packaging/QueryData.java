@@ -1,6 +1,5 @@
 package com.pdm.packaging;
 
-import javax.management.Query;
 import java.util.*;
 
 public class QueryData {

@@ -5,14 +5,16 @@ public class Order {
     private final int senderID;
     private final int receiverID;
     private final boolean isPrePaid;
-    private final int cost;
+    private final double cost;
+    private final boolean isComplete;
 
-    public Order(int orderID, int senderID, int receiverID, boolean isPrePaid, int cost) {
+    public Order(int orderID, int senderID, int receiverID, boolean isPrePaid, double cost, boolean isComplete) {
         this.orderID = orderID;
         this.senderID = senderID;
         this.receiverID = receiverID;
         this.isPrePaid = isPrePaid;
         this.cost = cost;
+        this.isComplete = isComplete;
     }
 
     public int getOrderID() {
@@ -31,7 +33,11 @@ public class Order {
         return isPrePaid;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
+    }
+
+    public boolean isComplete() {
+        return isComplete;
     }
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.*;
 
 public class H2Calls {
 
@@ -49,6 +50,23 @@ public class H2Calls {
         }
     }
 
+    public String buildQuery(String base, LinkedHashMap<String, String> arguments) {
+        int size = arguments.keySet().size();
+        if (size > 0) {
+            base += " where";
+            Object[] keys = arguments.keySet().toArray();
+            Object[] values = arguments.values().toArray();
+            for (int i = 0; i < size; i++) {
+                base += " " + keys[i].toString() + "=" + values[i].toString();
+                if (i < size - 1) {
+                    base += " and";
+                }
+            }
+        }
+        base += ";";
+        return base;
+    }
+
     public Connection getH2connection() {
         return h2connection;
     }
@@ -78,6 +96,7 @@ public class H2Calls {
             results = stmt.executeQuery(cmd);
         } catch (Exception e) {
             System.out.println("Error querying statement '" + cmd + "'\n" + e);
+            e.printStackTrace();
         }
         return results;
     }
@@ -238,15 +257,15 @@ public class H2Calls {
 //        execute(table8);
 //        execute(table9);
 //        execute(table10);
-        execute(users);
-        execute(businesses);
-        execute(locations);
-        execute(packages);
-        execute(orders);
-        execute(tracking);
-        execute(traits);
-        execute(transport);
-        execute(status);
+//        execute(users);
+//        execute(businesses);
+//        execute(locations);
+//        execute(packages);
+//        execute(orders);
+//        execute(tracking);
+//        execute(traits);
+//        execute(transport);
+//        execute(status);
     }
 
 }

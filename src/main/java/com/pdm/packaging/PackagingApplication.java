@@ -13,6 +13,4 @@ public class PackagingApplication {
 		H2Calls h2 = new H2Calls();
 		h2.createConnection("./localDB", "root", "default", 0);
 	}
-
-
 }

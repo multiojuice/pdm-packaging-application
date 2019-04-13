@@ -15,7 +15,7 @@ import static com.pdm.packaging.PackagingApplication.h2;
 @RestController
 public class UserController {
 
-    @RequestMapping
+    @RequestMapping("/user")
     public QueryData user(@RequestParam(value="userID", defaultValue = "0") Integer user_ID,
                           @RequestParam(value="name", defaultValue = "") String name,
                           @RequestParam(value="isPremium", defaultValue = "-1") Integer is_premium,
@@ -31,13 +31,13 @@ public class UserController {
         userCall = h2.buildQuery(userCall, arguments);
         QueryData results = new QueryData();
         try {
-            ResultSet orders = h2.query(userCall);
-            while (orders.next()) {
-                results.addData(new User(orders.getInt("user_ID"),
-                        orders.getString("name"),
-                        orders.getBoolean("is_premium"),
-                        orders.getInt("phone_number"),
-                        orders.getInt("business_ID")));
+            ResultSet users = h2.query(userCall);
+            while (users.next()) {
+                results.addData(new User(users.getInt("user_ID"),
+                        users.getString("name"),
+                        users.getBoolean("is_premium"),
+                        users.getInt("phone_number"),
+                        users.getInt("business_ID")));
             }
         } catch (SQLException se) {
             System.out.println("Error parsing results of query '" + userCall + "'");

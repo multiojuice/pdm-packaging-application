@@ -14,6 +14,8 @@ import static com.pdm.packaging.PackagingApplication.h2;
 
 @RestController
 public class BusinessController {
+
+    @RequestMapping("/business")
     public QueryData business(@RequestParam(value="businessID", defaultValue = "0") Integer business_ID,
                               @RequestParam(value="name", defaultValue = "") String name,
                               @RequestParam(value="address", defaultValue = "") String address) {

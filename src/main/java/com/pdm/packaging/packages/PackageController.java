@@ -24,7 +24,8 @@ public class PackageController {
                               @RequestParam(value="deliveryTime", defaultValue = "0") Integer delivery_time,
                               @RequestParam(value="trait", defaultValue = "-1") Integer trait,
                               @RequestParam(value="trackingID", defaultValue = "0") Integer tracking_ID) {
-        String packageCall = "select * from business";
+        String packageCall = "select * from package";
+        //if (trait > -1) packageCall += ",trait"
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (package_ID > 0) arguments.put("package_ID", package_ID.toString());
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
@@ -43,7 +44,7 @@ public class PackageController {
                         packages.getInt("shipping_status"),
                         packages.getInt("weight"),
                         packages.getInt("deliver_time"),
-                        packages.getInt("trait"),
+                        packages.getString("trait"),
                         packages.getInt("tracking_ID")));
             }
         } catch (SQLException se) {

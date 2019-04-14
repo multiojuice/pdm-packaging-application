@@ -58,12 +58,13 @@ public class OrderController {
                               @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
         String orderAdd = "insert into order (";
         String attributes = "";
-        if (order_ID > 0) orderAdd += "order_ID"; attributes += order_ID.toString() + ", ";
-        if (sender_ID > 0) orderAdd += "sender_ID"; attributes += sender_ID.toString() + ", ";
-        if (receiver_ID > 0) orderAdd += "receiver_ID"; attributes += receiver_ID.toString() + ", ";
-        if (pre_paid < 2 && pre_paid > -1) orderAdd += "is_prepaid"; attributes += pre_paid.toString() + ", ";
-        if (cost > -0.01) orderAdd += "cost"; attributes += cost.toString() + ", ";
-        if (completed < 2 && completed > -1) orderAdd += "is_complete"; attributes += completed.toString() + ", ";
+        if (order_ID > 0) orderAdd += "order_ID, "; attributes += order_ID.toString() + ", ";
+        if (sender_ID > 0) orderAdd += "sender_ID, "; attributes += sender_ID.toString() + ", ";
+        if (receiver_ID > 0) orderAdd += "receiver_ID, "; attributes += receiver_ID.toString() + ", ";
+        if (pre_paid < 2 && pre_paid > -1) orderAdd += "is_prepaid, "; attributes += pre_paid.toString() + ", ";
+        if (cost > -0.01) orderAdd += "cost, "; attributes += cost.toString() + ", ";
+        if (completed < 2 && completed > -1) orderAdd += "is_complete, "; attributes += completed.toString() + ", ";
+        orderAdd = orderAdd.substring(0, orderAdd.length() - 3);
         orderAdd += ") values (" + attributes.substring(0, attributes.length() - 3) + ");";
         QueryData results = new QueryData();
         try {

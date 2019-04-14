@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.pdm.packaging.QueryData;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import static com.pdm.packaging.PackagingApplication.h2;
 @RestController
 public class OrderController {
 
+    @CrossOrigin
     @RequestMapping("/order")
     public QueryData order(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
                        @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,

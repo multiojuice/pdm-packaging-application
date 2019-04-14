@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.pdm.packaging.QueryData;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,7 @@ import static com.pdm.packaging.PackagingApplication.h2;
 
 @RestController
 public class PackageController {
-
+    @CrossOrigin
     @RequestMapping("/package")
     public QueryData business(@RequestParam(value="packageID", defaultValue = "0") Integer package_ID,
                               @RequestParam(value="orderID", defaultValue = "0") Integer order_ID,

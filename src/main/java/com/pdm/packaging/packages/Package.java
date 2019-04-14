@@ -6,15 +6,17 @@ public class Package {
     private int shippingStatus;
     private int weight;
     private int deliveryTime;
+    private int traitID;
     private String trait;
     private int trackingID;
 
-    public Package(int packageID, int orderID, int shippingStatus, int weight, int deliveryTime, String trait, int trackingID) {
+    public Package(int packageID, int orderID, int shippingStatus, int weight, int deliveryTime, int traitID, String trait, int trackingID) {
         this.packageID = packageID;
         this.orderID = orderID;
         this.shippingStatus = shippingStatus;
         this.weight = weight;
         this.deliveryTime = deliveryTime;
+        this.traitID = traitID;
         this.trait = trait;
         this.trackingID = trackingID;
     }
@@ -37,6 +39,10 @@ public class Package {
 
     public int getDeliveryTime() {
         return deliveryTime;
+    }
+
+    public int getTraitID() {
+        return traitID;
     }
 
     public String getTrait() {

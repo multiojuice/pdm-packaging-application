@@ -5,10 +5,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 import com.pdm.packaging.QueryData;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.pdm.packaging.packages.PackageController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.pdm.packaging.PackagingApplication.h2;
 
@@ -90,35 +88,40 @@ public class OrderController {
     }
 
 
-    @RequestMapping("/order/add/")
-    public QueryData addOrder(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
-                              @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,
-                              @RequestParam(value="receiverID", defaultValue = "0") Integer receiver_ID,
-                              @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
-                              @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
-                              @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
+    @PostMapping("/order/add/")
+    public QueryData addOrder(@RequestBody Order newOrder,
+                              @RequestBody List<Package> packageList) {
         String orderAdd = "insert into order (";
         String attributes = "";
-        if (order_ID > 0) orderAdd += "order_ID, "; attributes += order_ID.toString() + ", ";
+        Integer sender_ID = newOrder.getSenderID();
+        Integer receiver_ID = newOrder.getReceiverID();
+        Integer pre_paid = newOrder.isPrePaid() ? 1 : 0;
+        Double cost = newOrder.getCost();
+        Integer completed = newOrder.isComplete() ? 1 : 0;
         if (sender_ID > 0) orderAdd += "sender_ID, "; attributes += sender_ID.toString() + ", ";
         if (receiver_ID > 0) orderAdd += "receiver_ID, "; attributes += receiver_ID.toString() + ", ";
-        if (pre_paid < 2 && pre_paid > -1) orderAdd += "is_prepaid, "; attributes += pre_paid.toString() + ", ";
+        orderAdd += "is_prepaid, ";
+        attributes += pre_paid.toString() + ", ";
         if (cost > -0.01) orderAdd += "cost, "; attributes += cost.toString() + ", ";
-        if (completed < 2 && completed > -1) orderAdd += "is_complete, "; attributes += completed.toString() + ", ";
+        orderAdd += "is_complete, ";
+        attributes += completed.toString() + ", ";
         orderAdd = orderAdd.substring(0, orderAdd.length() - 3);
         orderAdd += ") values (" + attributes.substring(0, attributes.length() - 3) + ");";
         QueryData results = new QueryData();
         try {
-            ResultSet newOrder = h2.query(orderAdd);
-            if (newOrder.next()) {
-                results.addData(new Order(newOrder.getInt("order_ID"),
-                        newOrder.getInt("sender_ID"),
-                        newOrder.getInt("receiver_ID"),
-                        newOrder.getBoolean("is_prepaid"),
-                        newOrder.getDouble("cost"),
-                        newOrder.getBoolean("is_complete")));
+            ResultSet newerOrder = h2.query(orderAdd);
+            if (newerOrder.next()) {
+                results.addData(new Order(newerOrder.getInt("order_ID"),
+                        newerOrder.getInt("sender_ID"),
+                        newerOrder.getInt("receiver_ID"),
+                        newerOrder.getBoolean("is_prepaid"),
+                        newerOrder.getDouble("cost"),
+                        newerOrder.getBoolean("is_complete")));
             } else {
                 results = h2.errorCall(results, orderAdd);
+            }
+            for (Package p: packageList) {
+                PackageController.addPackage(p);
             }
         } catch (SQLException se) {
             results = h2.errorCall(results, orderAdd);

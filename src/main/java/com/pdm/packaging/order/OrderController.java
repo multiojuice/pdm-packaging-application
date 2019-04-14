@@ -29,9 +29,9 @@ public class OrderController {
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
         if (sender_ID > 0) arguments.put("sender_ID", sender_ID.toString());
         if (receiver_ID > 0) arguments.put("receiver_ID", receiver_ID.toString());
-        if (pre_paid < 2 && pre_paid > -1) arguments.put("is_prepaid", pre_paid.toString());
-        if (cost > -0.01) arguments.put("cost", cost.toString());
-        if (completed < 2 && completed > -1) arguments.put("is_complete", completed.toString());
+        if (pre_paid == 0 || pre_paid == 1) arguments.put("is_prepaid", pre_paid.toString());
+        if (cost >= 0.0) arguments.put("cost", cost.toString());
+        if (completed == 0 || completed == 1) arguments.put("is_complete", completed.toString());
         orderCall = h2.buildQuery(orderCall, arguments);
         QueryData results = new QueryData();
         try {

@@ -80,12 +80,14 @@ public class H2Calls {
         }
     }
 
-    public void execute(String cmd) {
+    public boolean execute(String cmd) {
         try {
             Statement stmt = h2connection.createStatement();
             stmt.execute(cmd);
+            return true;
         } catch (Exception e) {
             System.out.println("Error executing statement '" + cmd + "\n" + e);
+            return false;
         }
     }
 

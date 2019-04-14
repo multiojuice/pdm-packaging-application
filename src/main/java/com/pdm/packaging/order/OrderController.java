@@ -49,6 +49,47 @@ public class OrderController {
         return results;
     }
 
+
+    @CrossOrigin
+    @RequestMapping("/order/user")
+    public QueryData orderFromUser(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
+                           @RequestParam(value="userID", defaultValue = "0") Integer user_ID,
+                           @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
+                           @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
+                           @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
+        String orderCall = "select * from orders";
+        LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
+        if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
+        if (pre_paid == 0 || pre_paid == 1) arguments.put("is_prepaid", pre_paid.toString());
+        if (cost >= 0.0) arguments.put("cost", cost.toString());
+        if (completed == 0 || completed == 1) arguments.put("is_complete", completed.toString());
+
+        orderCall = h2.buildQuery(orderCall, arguments);
+        String userIDStr = "(sender_ID = " + user_ID.toString() + " or receiver_ID = " + user_ID.toString() + ");";
+
+        userIDStr = orderCall.contains("where") ? " and " + userIDStr : " where " + userIDStr;
+        System.out.println(userIDStr);
+        orderCall = orderCall.replace(";", userIDStr);
+
+        System.out.println(orderCall);
+        QueryData results = new QueryData();
+        try {
+            ResultSet orders = h2.query(orderCall);
+            while (orders.next()) {
+                results.addData(new Order(orders.getInt("order_ID"),
+                        orders.getInt("sender_ID"),
+                        orders.getInt("receiver_ID"),
+                        orders.getBoolean("is_prepaid"),
+                        orders.getDouble("cost"),
+                        orders.getBoolean("is_complete")));
+            }
+        } catch (SQLException se) {
+            results = h2.errorCall(results, orderCall);
+        }
+        return results;
+    }
+
+
     @RequestMapping("/order/add/")
     public QueryData addOrder(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
                               @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,

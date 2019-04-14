@@ -43,6 +43,7 @@ public class PackageController {
                         packages.getInt("shipping_status"),
                         packages.getInt("weight"),
                         packages.getInt("delivery_time"),
+                        packages.getInt("traits.trait_ID"),
                         packages.getString("traits.name"),
                         packages.getInt("tracking_ID")));
             }
@@ -54,5 +55,38 @@ public class PackageController {
             results = h2.errorCall(results, packageCall);
         }
         return results;
+    }
+
+    public boolean addPackage(Package p, Integer order_ID) {
+        String addPackageCall = "insert into package (";
+        String attributes = "";
+        attributes += order_ID.toString() + ", ";
+        Integer package_ID = p.getPackageID(); attributes += package_ID.toString() + ", ";
+        Integer shipping_status = p.getShippingStatus(); attributes += shipping_status.toString() + ", ";
+        Integer weight = p.getWeight(); attributes += weight.toString() + ", ";
+        Integer delivery_time = p.getDeliveryTime(); attributes += delivery_time.toString() + ", ";
+        Integer trait_ID = p.getTraitID(); attributes += trait_ID.toString() + ", ";
+        Integer tracking_ID = p.getTrackingID(); attributes += tracking_ID.toString() + ", ";
+        addPackageCall += "order_ID, ";
+        addPackageCall += "package_ID, ";
+        addPackageCall += "shipping_status, ";
+        addPackageCall += "weight, ";
+        addPackageCall += "delivery_time, ";
+        addPackageCall += "trait, ";
+        addPackageCall += "tracking_ID, ";
+        addPackageCall = addPackageCall.substring(0, addPackageCall.length() - 3);
+        addPackageCall += ") values (" + attributes.substring(0, attributes.length() - 3) + ");";
+        QueryData results = new QueryData();
+        try {
+            ResultSet packageAdd = h2.query(addPackageCall);
+            if (packageAdd.next()) {
+                return true;
+            } else {
+                results = h2.errorCall(results, addPackageCall);
+            }
+        }  catch (SQLException se) {
+            results = h2.errorCall(results, addPackageCall);
+        }
+        return false;
     }
 }

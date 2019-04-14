@@ -40,9 +40,7 @@ public class UserController {
                         users.getInt("business_ID")));
             }
         } catch (SQLException se) {
-            System.out.println("Error parsing results of query '" + userCall + "'");
-            results.setData(new ArrayList<Object>(){{add(new Exception("Could not complete request"));}});
-            results.setCount(-1);
+            results = h2.errorCall(results, userCall);
         }
         return results;
     }

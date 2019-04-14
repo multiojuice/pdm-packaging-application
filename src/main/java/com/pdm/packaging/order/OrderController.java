@@ -43,9 +43,7 @@ public class OrderController {
                         orders.getBoolean("is_complete")));
             }
         } catch (SQLException se) {
-            System.out.println("Error parsing results of query '" + orderCall + "'");
-            results.setData(new ArrayList<Object>(){{add(new Exception("Could not complete request"));}});
-            results.setCount(-1);
+            results = h2.errorCall(results, orderCall);
         }
         return results;
     }

@@ -101,6 +101,13 @@ public class H2Calls {
         return results;
     }
 
+    public QueryData errorCall(QueryData results, String call) {
+        System.out.println("Error parsing results of query '" + call + "'");
+        results.setData(new ArrayList<Object>(){{add(new Exception("Could not complete request"));}});
+        results.setCount(-1);
+        return results;
+    }
+
     public void initialize() {
         String table1 = "create table if not exists orders (order_ID integer primary key auto_increment, sender_ID integer not null, receiver_ID integer not null, is_prepaid bit default 0, cost decimal(20, 2), is_complete bit default 0 not null);";
         String table2 = "create table if not exists users (user_ID integer primary key auto_increment, name varchar(255) not null, is_premium bit default 0 not null, phone_number varchar(11), business_ID integer);";

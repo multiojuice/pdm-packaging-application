@@ -34,9 +34,7 @@ public class BusinessController {
                         businesses.getString("address")));
             }
         } catch (SQLException se) {
-            System.out.println("Error parsing results of query '" + businessCall + "'");
-            results.setData(new ArrayList<Object>(){{add(new Exception("Could not complete request"));}});
-            results.setCount(-1);
+            results = h2.errorCall(results, businessCall);
         }
         return results;
     }

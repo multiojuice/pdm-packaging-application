@@ -46,9 +46,7 @@ public class PackageController {
                         packages.getInt("tracking_ID")));
             }
         } catch (SQLException se) {
-            System.out.println("Error parsing results of query '" + packageCall + "'");
-            results.setData(new ArrayList<Object>(){{add(new Exception("Could not complete request"));}});
-            results.setCount(-1);
+            results = h2.errorCall(results, packageCall);
         }
         return results;
     }

@@ -2,8 +2,7 @@ package com.pdm.packaging.order;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 import com.pdm.packaging.QueryData;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,11 +18,11 @@ public class OrderController {
     @CrossOrigin
     @RequestMapping("/order")
     public QueryData order(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
-                       @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,
-                       @RequestParam(value="receiverID", defaultValue = "0") Integer receiver_ID,
-                       @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
-                       @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
-                       @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
+                           @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,
+                           @RequestParam(value="receiverID", defaultValue = "0") Integer receiver_ID,
+                           @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
+                           @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
+                           @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
         String orderCall = "select * from orders";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
@@ -48,5 +47,30 @@ public class OrderController {
             results = h2.errorCall(results, orderCall);
         }
         return results;
+    }
+
+    @RequestMapping("/order/add/")
+    public QueryData addOrder(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
+                              @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,
+                              @RequestParam(value="receiverID", defaultValue = "0") Integer receiver_ID,
+                              @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
+                              @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
+                              @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
+        String orderAdd = "insert into order (";
+        String attributes = "";
+        if (order_ID > 0) orderAdd += "order_ID"; attributes += order_ID.toString() + ", ";
+        if (sender_ID > 0) orderAdd += "sender_ID"; attributes += sender_ID.toString() + ", ";
+        if (receiver_ID > 0) orderAdd += "receiver_ID"; attributes += receiver_ID.toString() + ", ";
+        if (pre_paid < 2 && pre_paid > -1) orderAdd += "is_prepaid"; attributes += pre_paid.toString() + ", ";
+        if (cost > -0.01) orderAdd += "cost"; attributes += cost.toString() + ", ";
+        if (completed < 2 && completed > -1) orderAdd += "is_complete"; attributes += completed.toString() + ", ";
+        orderAdd += ") values (" + attributes.substring(0, attributes.length() - 3) + ");";
+        LinkedHashMap<String, String> resultset = new LinkedHashMap<>();
+        if (h2.execute(orderAdd)) {
+            resultset.put("success", "true");
+        } else {
+            resultset.put("success", "false");
+        }
+        return new QueryData(){{addData(resultset);}};
     }
 }

@@ -109,7 +109,7 @@ public class OrderController {
         if (receiver_ID > 0) orderAdd += "receiver_ID, "; attributes += receiver_ID.toString() + ", ";
         orderAdd += "is_prepaid, ";
         attributes += pre_paid.toString() + ", ";
-        if (cost > -0.01) orderAdd += "cost, "; attributes += cost.toString() + ", ";
+        if (cost >= 0.0) orderAdd += "cost, "; attributes += cost.toString() + ", ";
         orderAdd += "is_complete, ";
         attributes += completed.toString() + ", ";
         orderAdd = orderAdd.substring(0, orderAdd.length() - 3);

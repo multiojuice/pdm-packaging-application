@@ -1,11 +1,13 @@
 package com.pdm.packaging.order;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
 import com.pdm.packaging.QueryData;
 import com.pdm.packaging.packages.PackageController;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.web.bind.annotation.*;
 
 import static com.pdm.packaging.PackagingApplication.h2;
@@ -21,7 +23,7 @@ public class OrderController {
                            @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
                            @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
                            @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
-        String orderCall = "select * from orders";
+        String orderCall = "select * from orders inner join users s on orders.sender_ID=s.user_ID inner join users r on orders.receiver_ID=r.user_ID";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
         if (sender_ID > 0) arguments.put("sender_ID", sender_ID.toString());
@@ -34,14 +36,19 @@ public class OrderController {
         try {
             ResultSet orders = h2.query(orderCall);
             while (orders.next()) {
+                ResultSetMetaData rsmd = orders.getMetaData();
+                for (int i = 1; i < rsmd.getColumnCount() - 1; i++) {
+                    System.out.println(i + " : " + rsmd.getColumnName(i));
+                }
                 results.addData(new Order(orders.getInt("order_ID"),
-                        orders.getInt("sender_ID"),
-                        orders.getInt("receiver_ID"),
+                        orders.getString("s.name"),
+                        orders.getString("r.name"),
                         orders.getBoolean("is_prepaid"),
                         orders.getDouble("cost"),
                         orders.getBoolean("is_complete")));
             }
         } catch (SQLException se) {
+            se.printStackTrace();
             results = h2.errorCall(results, orderCall);
         }
         return results;
@@ -90,7 +97,7 @@ public class OrderController {
 
     @PostMapping("/order/add/")
     public QueryData addOrder(@RequestBody Order newOrder,
-                              @RequestBody List<Package> packageList) {
+                              @RequestBody List<com.pdm.packaging.packages.Package> packageList) {
         String orderAdd = "insert into order (";
         String attributes = "";
         Integer sender_ID = newOrder.getSenderID();
@@ -117,11 +124,11 @@ public class OrderController {
                         newerOrder.getBoolean("is_prepaid"),
                         newerOrder.getDouble("cost"),
                         newerOrder.getBoolean("is_complete")));
+                for (com.pdm.packaging.packages.Package p: packageList) {
+                    PackageController.addPackage(p, newerOrder.getInt("order_ID"));
+                }
             } else {
                 results = h2.errorCall(results, orderAdd);
-            }
-            for (Package p: packageList) {
-                PackageController.addPackage(p);
             }
         } catch (SQLException se) {
             results = h2.errorCall(results, orderAdd);

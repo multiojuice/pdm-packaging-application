@@ -2,8 +2,10 @@ package com.pdm.packaging.order;
 
 public class Order {
     private final int orderID;
-    private final int senderID;
-    private final int receiverID;
+    private int senderID = 0;
+    private String sender;
+    private int receiverID;
+    private String receiver;
     private final boolean isPrePaid;
     private final double cost;
     private final boolean isComplete;
@@ -17,6 +19,15 @@ public class Order {
         this.isComplete = isComplete;
     }
 
+    public Order(int orderID, String sender, String receiver, boolean isPrePaid, double cost, boolean isComplete) {
+        this.orderID = orderID;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.isPrePaid = isPrePaid;
+        this.cost = cost;
+        this.isComplete = isComplete;
+    }
+
     public int getOrderID() {
         return orderID;
     }
@@ -25,8 +36,16 @@ public class Order {
         return senderID;
     }
 
+    public String getSender() {
+        return sender;
+    }
+
     public int getReceiverID() {
         return receiverID;
+    }
+
+    public String getReceiver() {
+        return receiver;
     }
 
     public boolean isPrePaid() {

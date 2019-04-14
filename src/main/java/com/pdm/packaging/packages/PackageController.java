@@ -57,7 +57,7 @@ public class PackageController {
         return results;
     }
 
-    public boolean addPackage(Package p, Integer order_ID) {
+    public static boolean addPackage(Package p, Integer order_ID) {
         String addPackageCall = "insert into package (";
         String attributes = "";
         attributes += order_ID.toString() + ", ";

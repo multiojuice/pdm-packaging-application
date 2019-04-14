@@ -65,12 +65,22 @@ public class OrderController {
         if (cost > -0.01) orderAdd += "cost"; attributes += cost.toString() + ", ";
         if (completed < 2 && completed > -1) orderAdd += "is_complete"; attributes += completed.toString() + ", ";
         orderAdd += ") values (" + attributes.substring(0, attributes.length() - 3) + ");";
-        LinkedHashMap<String, String> resultset = new LinkedHashMap<>();
-        if (h2.execute(orderAdd)) {
-            resultset.put("success", "true");
-        } else {
-            resultset.put("success", "false");
+        QueryData results = new QueryData();
+        try {
+            ResultSet newOrder = h2.query(orderAdd);
+            if (newOrder.next()) {
+                results.addData(new Order(newOrder.getInt("order_ID"),
+                        newOrder.getInt("sender_ID"),
+                        newOrder.getInt("receiver_ID"),
+                        newOrder.getBoolean("is_prepaid"),
+                        newOrder.getDouble("cost"),
+                        newOrder.getBoolean("is_complete")));
+            } else {
+                results = h2.errorCall(results, orderAdd);
+            }
+        } catch (SQLException se) {
+            results = h2.errorCall(results, orderAdd);
         }
-        return new QueryData(){{addData(resultset);}};
+        return results;
     }
 }

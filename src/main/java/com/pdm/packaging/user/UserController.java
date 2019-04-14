@@ -24,8 +24,8 @@ public class UserController {
         String userCall = "select * from users";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (user_ID > 0) arguments.put("user_ID", user_ID.toString());
-        if (!name.equals("")) arguments.put("name", name);
-        if (is_premium > -1) arguments.put("is_premium", is_premium.toString());
+        if (name.length() > 0 && name.length() <= 255) arguments.put("name", name);
+        if (is_premium == 0 || is_premium == 1) arguments.put("is_premium", is_premium.toString());
         if (phone_number > 0) arguments.put("phone_number", phone_number.toString());
         if (business_ID > 0) arguments.put("business_ID", business_ID.toString());
         userCall = h2.buildQuery(userCall, arguments);

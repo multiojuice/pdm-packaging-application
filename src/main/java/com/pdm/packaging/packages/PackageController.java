@@ -29,10 +29,10 @@ public class PackageController {
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (package_ID > 0) arguments.put("package_ID", package_ID.toString());
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
-        if (shipping_status > 0) arguments.put("shipping_status", shipping_status.toString());
+        if (shipping_status >= 1 && shipping_status <= 5) arguments.put("shipping_status", shipping_status.toString());
         if (weight > 0) arguments.put("weight", weight.toString());
         if (delivery_time > 0) arguments.put("delivery_time", delivery_time.toString());
-        if (trait > 0 && trait < 6) arguments.put("trait", trait.toString());
+        if (trait >= 1 && trait <= 5) arguments.put("trait", trait.toString());
         if (tracking_ID > 0) arguments.put("tracking_ID", tracking_ID.toString());
         packageCall = h2.buildQuery(packageCall, arguments);
         QueryData results = new QueryData();

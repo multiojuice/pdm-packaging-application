@@ -20,7 +20,7 @@ public class TrackingController {
                               @RequestParam(value = "transportID", defaultValue = "0") Integer transport_ID,
                               @RequestParam(value = "currentlocationID", defaultValue = "0") Integer current_location_ID ) {
 
-        String trackingCall = "select * from tracking";
+        String trackingCall = "select * from tracking left outer join locations on tracking.current_location_ID=locations.location_ID left outer join transport on tracking.transport_ID=transport.transport_ID";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
 
         if(tracking_ID > 0) { arguments.put("tracking_ID", tracking_ID.toString()); }
@@ -35,7 +35,9 @@ public class TrackingController {
             while(tracking.next()) {
                 results.addData(new Tracking(tracking.getInt("tracking_ID"),
                         tracking.getInt("transport_ID"),
-                        tracking.getInt("current_location_ID")));
+                        tracking.getString("type"),
+                        tracking.getInt("current_location_ID"),
+                        tracking.getString("location_name")));
             }
 
         } catch (SQLException se) {

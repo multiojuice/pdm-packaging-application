@@ -54,7 +54,7 @@ public class TrackingController {
     @RequestMapping("/tracking/stops")
     public QueryData trackingLocations(@RequestParam(value = "locationID", defaultValue = "0") Integer location_ID ) {
 
-        String trackingCall = "select * from location_view left outer join locations as lname on lname.location_ID=location_view.location_ID inner join stops where location_view.tracking_id = stops.tracking_id and stops.stop_num = location_view.stop_num + 1 and stops.location_id = "
+        String trackingCall = "select *,lname.location_name as currentLoc,uname.location_name as upLoc from location_view left outer join locations as uname on uname.location_ID=" + location_ID.toString() + " left outer join locations as lname on lname.location_ID=location_view.location_ID inner join stops where location_view.tracking_id = stops.tracking_id and stops.stop_num = location_view.stop_num + 1 and stops.location_id = "
                 + location_ID.toString();
 
         QueryData results = new QueryData();
@@ -72,7 +72,9 @@ public class TrackingController {
                 results.addData(new FutureTracking(tracking.getInt("tracking_ID"),
                         tracking.getInt("location_view.stop_num"),
                         tracking.getInt("location_view.location_ID"),
-                        tracking.getString("location_name")));
+                        tracking.getString("currentLoc"),
+                        location_ID,
+                        tracking.getString("upLoc")));
             }
         } catch (SQLException se) {
             se.printStackTrace();

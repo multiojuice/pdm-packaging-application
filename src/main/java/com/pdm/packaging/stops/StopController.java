@@ -20,7 +20,8 @@ public class StopController {
     public QueryData business(@RequestParam(value="trackingID", defaultValue = "0") Integer tracking_ID,
                               @RequestParam(value="locationID", defaultValue = "0") Integer location_ID,
                               @RequestParam(value="stopNum", defaultValue = "0") Integer stop_num) {
-        String stopCall = "select * from stop";
+        String stopCall =   "select * from stops inner join locations on stops.location_ID=locations.location_ID";
+        //String userCall = "select * from users inner join business on users.business_ID=business.business_ID";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (tracking_ID > 0) arguments.put("tracking_ID", tracking_ID.toString());
         if (location_ID > 0) arguments.put("location_ID", location_ID.toString());
@@ -30,11 +31,14 @@ public class StopController {
         try {
             ResultSet stops = h2.query(stopCall);
             while (stops.next()) {
-                results.addData(new Stop(stops.getInt("tracking_ID"),
+                results.addData(new Stop(
+                        stops.getInt("tracking_ID"),
                         stops.getInt("location_ID"),
-                        stops.getInt("stop_num")));
+                        stops.getString("stop.name")
+                        ));
             }
         } catch (SQLException se) {
+            se.printStackTrace();
             results = h2.errorCall(results, stopCall);
         }
         return results;

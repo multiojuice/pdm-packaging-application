@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 import com.pdm.packaging.QueryData;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,33 @@ public class UserController {
         } catch (SQLException se) {
             se.printStackTrace();
             results = h2.errorCall(results, userCall);
+        }
+        return results;
+    }
+
+    @CrossOrigin
+    @RequestMapping("/user/add")
+    public QueryData addUsers(@RequestParam(value="userID", defaultValue = "0") Integer user_ID,
+                                 @RequestParam(value="name", defaultValue = "") String name,
+                                 @RequestParam(value="isPremium", defaultValue = "-1") Integer is_premium,
+                                 @RequestParam(value="phoneNumber", defaultValue = "") String phone_number,
+                                 @RequestParam(value="businessID", defaultValue = "0") Integer business_ID) {
+        String str = "insert into users (name, is_premium, phone_number, business_ID) values (";
+        str = str + name + "," + is_premium  + "," + phone_number  + "," + business_ID + ");";
+        QueryData results = new QueryData();
+
+        try {
+            ResultSet newerUser = h2.execute(str);
+            newerUser = h2.query("select MAX(user_ID) as ID from users");
+
+            if (newerUser.next()) {
+                results.addData(new User(newerUser.getInt("ID")));
+
+            } else {
+                results = h2.errorCall(results, str);
+            }
+        } catch (SQLException se) {
+            results = h2.errorCall(results, str);
         }
         return results;
     }

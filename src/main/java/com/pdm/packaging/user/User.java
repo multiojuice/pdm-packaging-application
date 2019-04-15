@@ -24,6 +24,10 @@ public class User {
         this.businessName = businessName;
     }
 
+    public User(int userID) {
+        this.userID = userID;
+    }
+
     public int getUserID() {
         return userID;
     }

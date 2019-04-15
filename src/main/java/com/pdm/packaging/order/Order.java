@@ -6,9 +6,9 @@ public class Order {
     private String sender;
     private int receiverID;
     private String receiver;
-    private final boolean isPrePaid;
-    private final double cost;
-    private final boolean isComplete;
+    private boolean isPrePaid;
+    private double cost;
+    private boolean isComplete;
 
     public Order(int orderID, int senderID, int receiverID, boolean isPrePaid, double cost, boolean isComplete) {
         this.orderID = orderID;
@@ -17,6 +17,11 @@ public class Order {
         this.isPrePaid = isPrePaid;
         this.cost = cost;
         this.isComplete = isComplete;
+    }
+
+    public Order(int orderID) {
+        this.orderID = orderID;
+
     }
 
     public Order(int orderID, String sender, String receiver, boolean isPrePaid, double cost, boolean isComplete) {

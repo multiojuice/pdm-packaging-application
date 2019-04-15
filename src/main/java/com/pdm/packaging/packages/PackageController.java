@@ -24,7 +24,7 @@ public class PackageController {
                               @RequestParam(value="deliveryTime", defaultValue = "0") Integer delivery_time,
                               @RequestParam(value="trait", defaultValue = "0") Integer trait,
                               @RequestParam(value="trackingID", defaultValue = "0") Integer tracking_ID) {
-        String packageCall = "select * from package inner join traits on package.trait=traits.trait_ID";
+        String packageCall = "select * from package left outer join traits on package.trait=traits.trait_ID left outer join status on package.shipping_status=status.status_ID";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (package_ID > 0) arguments.put("package_ID", package_ID.toString());
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
@@ -41,6 +41,7 @@ public class PackageController {
                 results.addData(new Package(packages.getInt("package_ID"),
                         packages.getInt("order_ID"),
                         packages.getInt("shipping_status"),
+                        packages.getString("description"),
                         packages.getInt("weight"),
                         packages.getInt("delivery_time"),
                         packages.getInt("traits.trait_ID"),

@@ -23,7 +23,7 @@ public class OrderController {
                            @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
                            @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
                            @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
-        String orderCall = "select * from orders inner join users s on orders.sender_ID=s.user_ID inner join users r on orders.receiver_ID=r.user_ID";
+        String orderCall = "select *,s.name as sname,r.name as rname from orders left outer join users as s on orders.sender_ID=s.user_ID left outer join users as r on orders.receiver_ID=r.user_ID";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
         if (sender_ID > 0) arguments.put("sender_ID", sender_ID.toString());
@@ -38,11 +38,11 @@ public class OrderController {
             while (orders.next()) {
                 ResultSetMetaData rsmd = orders.getMetaData();
                 for (int i = 1; i < rsmd.getColumnCount() - 1; i++) {
-                    System.out.println(i + " : " + rsmd.getColumnName(i));
+                    System.out.println(i + " : " + rsmd.getTableName(i) + "." + rsmd.getColumnName(i));
                 }
                 results.addData(new Order(orders.getInt("order_ID"),
-                        orders.getString("s.name"),
-                        orders.getString("r.name"),
+                        orders.getString("sname"),
+                        orders.getString("rname"),
                         orders.getBoolean("is_prepaid"),
                         orders.getDouble("cost"),
                         orders.getBoolean("is_complete")));

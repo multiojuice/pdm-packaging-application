@@ -115,6 +115,7 @@ public class OrderController {
         orderAdd = orderAdd.substring(0, orderAdd.length() - 3);
         orderAdd += ") values (" + attributes.substring(0, attributes.length() - 3) + ");";
         QueryData results = new QueryData();
+
         try {
             ResultSet newerOrder = h2.query(orderAdd);
             if (newerOrder.next()) {

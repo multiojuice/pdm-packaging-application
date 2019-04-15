@@ -36,10 +36,6 @@ public class OrderController {
         try {
             ResultSet orders = h2.query(orderCall);
             while (orders.next()) {
-                ResultSetMetaData rsmd = orders.getMetaData();
-                for (int i = 1; i < rsmd.getColumnCount() - 1; i++) {
-                    System.out.println(i + " : " + rsmd.getTableName(i) + "." + rsmd.getColumnName(i));
-                }
                 results.addData(new Order(orders.getInt("order_ID"),
                         orders.getString("sname"),
                         orders.getString("rname"),

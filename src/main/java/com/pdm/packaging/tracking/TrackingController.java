@@ -1,14 +1,17 @@
 package com.pdm.packaging.tracking;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
 
 import com.pdm.packaging.QueryData;
+import com.pdm.packaging.stops.Stop;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import sun.reflect.generics.tree.Tree;
 
 import static com.pdm.packaging.PackagingApplication.h2;
 
@@ -51,19 +54,26 @@ public class TrackingController {
     @RequestMapping("/tracking/stops")
     public QueryData trackingLocations(@RequestParam(value = "locationID", defaultValue = "0") Integer location_ID ) {
 
-        String trackingCall = "select * from location_view inner join stops where location_view.tracking_id = stops.tracking_id and stops.stop_num = location_view.stop_num + 1 and stops.location_id = "
+        String trackingCall = "select * from location_view left outer join locations as lname on lname.location_ID=location_view.location_ID inner join stops where location_view.tracking_id = stops.tracking_id and stops.stop_num = location_view.stop_num + 1 and stops.location_id = "
                 + location_ID.toString();
 
         QueryData results = new QueryData();
 
         try {
             ResultSet tracking = h2.query(trackingCall);
+            TreeMap<Integer, String> stopList = new TreeMap<>();
             while(tracking.next()) {
-                results.addData(new Tracking(tracking.getInt("tracking_ID"),
-                        tracking.getInt("location_view.transport_ID"),
-                        tracking.getInt("location_view.current_location_ID")));
-            }
 
+                ResultSetMetaData rsmd = tracking.getMetaData();
+                for (int i = 1; i < rsmd.getColumnCount() - 1; i++) {
+                    System.out.println(i + " : " + rsmd.getTableName(i) + "." + rsmd.getColumnName(i));
+                }
+
+                results.addData(new FutureTracking(tracking.getInt("tracking_ID"),
+                        tracking.getInt("location_view.stop_num"),
+                        tracking.getInt("location_view.location_ID"),
+                        tracking.getString("location_name")));
+            }
         } catch (SQLException se) {
             se.printStackTrace();
             results = h2.errorCall(results, trackingCall);

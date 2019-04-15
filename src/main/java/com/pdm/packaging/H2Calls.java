@@ -81,14 +81,14 @@ public class H2Calls {
         }
     }
 
-    public boolean execute(String cmd) {
+    public ResultSet execute(String cmd) {
         try {
             Statement stmt = h2connection.createStatement();
             stmt.execute(cmd);
-            return true;
+            return stmt.getGeneratedKeys();
         } catch (Exception e) {
             System.out.println("Error executing statement '" + cmd + "\n" + e);
-            return false;
+            return null;
         }
     }
 
@@ -273,6 +273,7 @@ public class H2Calls {
         System.out.println(traits);
         System.out.println(transport);
         System.out.println(status);
+        System.out.println(stops);
 
 //        execute(table1);
 //        execute(table2);

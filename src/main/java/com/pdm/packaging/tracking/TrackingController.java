@@ -60,11 +60,12 @@ public class TrackingController {
             ResultSet tracking = h2.query(trackingCall);
             while(tracking.next()) {
                 results.addData(new Tracking(tracking.getInt("tracking_ID"),
-                        tracking.getInt("transport_ID"),
-                        tracking.getInt("current_location_ID")));
+                        tracking.getInt("location_view.transport_ID"),
+                        tracking.getInt("location_view.current_location_ID")));
             }
 
         } catch (SQLException se) {
+            se.printStackTrace();
             results = h2.errorCall(results, trackingCall);
         }
 

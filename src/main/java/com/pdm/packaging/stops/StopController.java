@@ -34,7 +34,8 @@ public class StopController {
                 results.addData(new Stop(
                         stops.getInt("tracking_ID"),
                         stops.getInt("location_ID"),
-                        stops.getString("stop.name")
+                        stops.getInt("stop_num"),
+                        stops.getString("locations.location_name")
                         ));
             }
         } catch (SQLException se) {

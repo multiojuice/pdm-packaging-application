@@ -20,7 +20,7 @@ public class OrderController {
     public QueryData order(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
                            @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,
                            @RequestParam(value="receiverID", defaultValue = "0") Integer receiver_ID,
-                           @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
+                           @RequestParam(value="isPrepaid", defaultValue = "-1") Integer is_prepaid,
                            @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
                            @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
         String orderCall = "select *,s.name as sname,r.name as rname from orders left outer join users as s on orders.sender_ID=s.user_ID left outer join users as r on orders.receiver_ID=r.user_ID";
@@ -28,7 +28,7 @@ public class OrderController {
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
         if (sender_ID > 0) arguments.put("sender_ID", sender_ID.toString());
         if (receiver_ID > 0) arguments.put("receiver_ID", receiver_ID.toString());
-        if (pre_paid == 0 || pre_paid == 1) arguments.put("is_prepaid", pre_paid.toString());
+        if (is_prepaid == 0 || is_prepaid == 1) arguments.put("is_prepaid", is_prepaid.toString());
         if (cost >= 0.0) arguments.put("cost", cost.toString());
         if (completed == 0 || completed == 1) arguments.put("is_complete", completed.toString());
         orderCall = h2.buildQuery(orderCall, arguments);
@@ -59,13 +59,13 @@ public class OrderController {
     @RequestMapping("/order/user")
     public QueryData orderFromUser(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
                            @RequestParam(value="userID", defaultValue = "0") Integer user_ID,
-                           @RequestParam(value="isPrePaid", defaultValue = "-1") Integer pre_paid,
+                           @RequestParam(value="isPrepaid", defaultValue = "-1") Integer is_prepaid,
                            @RequestParam(value="cost", defaultValue = "-0.01") Double cost,
                            @RequestParam(value="completed", defaultValue = "-1") Integer completed) {
         String orderCall = "select * from orders";
         LinkedHashMap<String, String> arguments = new LinkedHashMap<>();
         if (order_ID > 0) arguments.put("order_ID", order_ID.toString());
-        if (pre_paid == 0 || pre_paid == 1) arguments.put("is_prepaid", pre_paid.toString());
+        if (is_prepaid == 0 || is_prepaid == 1) arguments.put("is_prepaid", is_prepaid.toString());
         if (cost >= 0.0) arguments.put("cost", cost.toString());
         if (completed == 0 || completed == 1) arguments.put("is_complete", completed.toString());
 

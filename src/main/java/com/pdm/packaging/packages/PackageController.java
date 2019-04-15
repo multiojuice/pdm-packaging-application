@@ -90,4 +90,33 @@ public class PackageController {
         }
         return false;
     }
+
+    @CrossOrigin
+    @RequestMapping("/package/add")
+    public QueryData addPackages(@RequestParam(value="packageID", defaultValue = "0") Integer package_ID,
+                                 @RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
+                                 @RequestParam(value="shippingStatus", defaultValue = "-1") Integer shipping_status,
+                                 @RequestParam(value="weight", defaultValue = "0") Integer weight,
+                                 @RequestParam(value="deliveryTime", defaultValue = "0") Integer delivery_time,
+                                 @RequestParam(value="trait", defaultValue = "0") Integer trait,
+                                 @RequestParam(value="trackingID", defaultValue = "0") Integer tracking_ID) {
+        String str = "insert into package (order_ID, shipping_status, cost, trait) values (";
+        str = str + order_ID + "," + shipping_status  + "," + weight  + "," + trait + ");";
+        QueryData results = new QueryData();
+
+        try {
+            ResultSet newerPackage = h2.execute(str);
+            newerPackage = h2.query("select MAX(package_ID) as ID from package");
+
+            if (newerPackage.next()) {
+                results.addData(new Package(newerPackage.getInt("ID")));
+
+            } else {
+                results = h2.errorCall(results, str);
+            }
+        } catch (SQLException se) {
+            results = h2.errorCall(results, str);
+        }
+        return results;
+    }
 }

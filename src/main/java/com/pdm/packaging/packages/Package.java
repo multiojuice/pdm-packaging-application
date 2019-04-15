@@ -23,6 +23,10 @@ public class Package {
         this.trackingID = trackingID;
     }
 
+    public Package(int packageID) {
+        this.packageID = packageID;
+    }
+
     public int getPackageID() {
         return packageID;
     }

@@ -12,9 +12,10 @@ public class Stop {
         this.stopNum = stopNum;
     }
 
-    public Stop(int trackingID, int locationID, String stopName){
+    public Stop(int trackingID, int locationID, int stopNum, String stopName){
         this.trackingID = trackingID;
         this.locationID = locationID;
+        this.stopNum = stopNum;
         this.stopName = stopName;
     }
 

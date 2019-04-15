@@ -17,7 +17,7 @@ import static com.pdm.packaging.PackagingApplication.h2;
 public class StopController {
     @CrossOrigin
     @RequestMapping("/stop")
-    public QueryData business(@RequestParam(value="trackingID", defaultValue = "0") Integer tracking_ID,
+    public QueryData stops(@RequestParam(value="trackingID", defaultValue = "0") Integer tracking_ID,
                               @RequestParam(value="locationID", defaultValue = "0") Integer location_ID,
                               @RequestParam(value="stopNum", defaultValue = "0") Integer stop_num) {
         String stopCall =   "select * from stops inner join locations on stops.location_ID=locations.location_ID";
@@ -34,7 +34,8 @@ public class StopController {
                 results.addData(new Stop(
                         stops.getInt("tracking_ID"),
                         stops.getInt("location_ID"),
-                        stops.getString("stop.name")
+                        stops.getInt("stop_num"),
+                        stops.getString("locations.location_name")
                         ));
             }
         } catch (SQLException se) {

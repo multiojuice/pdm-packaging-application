@@ -95,7 +95,7 @@ public class OrderController {
     }
 
     @CrossOrigin
-    @RequestMapping("/order/add/")
+    @RequestMapping("/order/add")
     public QueryData addOrder(@RequestParam(value="orderID", defaultValue = "0") Integer order_ID,
                            @RequestParam(value="userID", defaultValue = "0") Integer user_ID,
                               @RequestParam(value="senderID", defaultValue = "0") Integer sender_ID,

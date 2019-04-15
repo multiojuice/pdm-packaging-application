@@ -4,15 +4,24 @@ public class User {
     private int userID;
     private String name;
     private boolean isPremium;
-    private int phoneNumber;
+    private String phoneNumber;
     private int businessID;
+    private String businessName;
 
-    public User(int userID, String name, boolean isPremium, int phoneNumber, int businessID) {
+    public User(int userID, String name, boolean isPremium, String phoneNumber, int businessID) {
         this.userID = userID;
         this.name = name;
         this.isPremium = isPremium;
         this.phoneNumber = phoneNumber;
         this.businessID = businessID;
+    }
+
+    public User(int userID, String name, boolean isPremium, String phoneNumber, String businessName) {
+        this.userID = userID;
+        this.name = name;
+        this.isPremium = isPremium;
+        this.phoneNumber = phoneNumber;
+        this.businessName = businessName;
     }
 
     public int getUserID() {
@@ -27,11 +36,13 @@ public class User {
         return isPremium;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
     public int getBusinessID() {
         return businessID;
     }
+
+    public String getBusinessName() { return businessName; }
 }
